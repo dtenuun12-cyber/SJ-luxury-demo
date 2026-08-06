@@ -1,21 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Scroll Reveal Animations (Fixes the missing text issue)
+  // 1. Scroll Reveal Animations
   const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.15 // Triggers when 15% of the element is visible
+    threshold: 0.15 
   };
 
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('active');
-        observer.unobserve(entry.target); // Stop observing once it has animated in
+        observer.unobserve(entry.target); 
       }
     });
   }, observerOptions);
 
-  // Grab all elements with the 'reveal' class and observe them
   document.querySelectorAll('.reveal').forEach(el => {
     observer.observe(el);
   });
@@ -29,23 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Render Homepage Featured Collection
-  // (Ensures products-data.js is loaded and the grid exists)
+  // 3. Render Homepage Featured Collection (First 3 items)
   const featuredGrid = document.getElementById('featured-grid');
   if (featuredGrid && typeof COLLECTION !== 'undefined') {
-    // Render the first 3 items on the homepage
     renderPieces(COLLECTION.slice(0, 3), '#featured-grid');
+  }
+
+  // 4. Render Full Collection on the Collections Page (All items)
+  const fullGrid = document.getElementById('full-grid');
+  if (fullGrid && typeof COLLECTION !== 'undefined') {
+    renderPieces(COLLECTION, '#full-grid');
   }
 });
 
-// 4. Upgraded Collection Renderer
+// Upgraded Collection Renderer with Image Support
 function renderPieces(pieces, selector) {
   const container = document.querySelector(selector);
   if (!container) return;
   
   container.innerHTML = pieces.map(p => `
     <div class="piece reveal">
-      <div class="piece-media"><span class="piece-media-label">${p.name}</span></div>
+      <div class="piece-media">
+        <img src="${p.image}" alt="${p.name} - ${p.wood}" loading="lazy">
+      </div>
       <div class="piece-header">
         <span class="piece-tier">${p.tier || 'Signature Tier'}</span>
         <span class="piece-wood">${p.wood}</span>
@@ -57,7 +62,7 @@ function renderPieces(pieces, selector) {
     </div>
   `).join('');
   
-  // Apply the scroll reveal observer to the newly generated dynamic product cards
+  // Apply scroll reveal to newly generated cards
   setTimeout(() => {
     const dynamicObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -71,5 +76,5 @@ function renderPieces(pieces, selector) {
     document.querySelectorAll(selector + ' .reveal').forEach(el => {
       dynamicObserver.observe(el);
     });
-  }, 50); // Slight delay to ensure DOM is updated
+  }, 50); 
 }
