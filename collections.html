@@ -3,54 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collections — SJ Luxury Collezione</title>
+<title>The Archive — SJ Luxury Collezione</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nav-mark">
-    <svg class="seal" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="36" height="36" rx="3" fill="#6B2318"/><path d="M12 20c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7z" fill="none" stroke="#F5F1E7" stroke-width="1.4"/><circle cx="20" cy="20" r="3" fill="#F5F1E7"/></svg>
-    SJ Luxury Collezione
-  </a>
-  <button class="nav-toggle" aria-label="Menu">&#9776;</button>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="heritage.html">Heritage</a></li>
-    <li><a href="collections.html" class="active">Collections</a></li>
-    <li><a href="consultation.html">Consultation</a></li>
-  </ul>
-  <a href="consultation.html" class="nav-cta">Request Consultation</a>
-</nav>
-
-<header class="hero" style="padding-bottom: 50px;">
-  <div class="hero-eyebrow"><span class="label">The Collection</span></div>
-  <h1 style="font-size: clamp(34px, 5vw, 58px);">A Small Archive of Made-to-Order Pieces.</h1>
-  <p class="hero-sub">Every piece shown here is made only upon request — nothing is held in stock, and no two boards of rosewood grain identically. Pricing is shared privately, following a consultation, and reflects the material, scale, and hand-carving involved.</p>
+<!-- Sticky Glass Navigation -->
+<header class="nav-header">
+  <nav class="nav">
+    <a href="index.html" class="nav-mark">
+      <svg class="seal" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="36" height="36" rx="3" fill="#6B2318"/>
+        <path d="M12 20c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7z" fill="none" stroke="#FAF7F2" stroke-width="1.4"/>
+        <circle cx="20" cy="20" r="3" fill="#FAF7F2"/>
+      </svg>
+      SJ Luxury Collezione
+    </a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="heritage.html">Heritage</a></li>
+      <li><a href="collections.html" class="active">Collections</a></li>
+      <li><a href="consultation.html">Consultation</a></li>
+    </ul>
+    <a href="consultation.html" class="nav-cta">Request Consultation</a>
+  </nav>
 </header>
 
-<section style="padding-top:0;">
-  <div class="wrap">
-    <div class="piece-grid" id="collection-grid"></div>
-  </div>
-</section>
+<main>
+  <!-- Page Header -->
+  <section style="padding-top: 140px; padding-bottom: 60px;">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">The Archive</span>
+        <h2>Our Complete Collection</h2>
+        <p>Discover the full range of our heirloom craftsmanship. Each piece is meticulously hand-carved to order, ensuring your furniture remains an exclusive testament to Ming dynasty artistry.</p>
+      </div>
+    </div>
+  </section>
 
-<section style="background: var(--surface); text-align:center;">
-  <div class="wrap-narrow reveal">
-    <h2 style="font-family: var(--font-display); font-weight:400; font-size: clamp(26px,3vw,36px); margin-bottom:18px;">Not Sure Which Piece Suits Your Home?</h2>
-    <p style="color: var(--ink-soft); margin-bottom: 34px;">Our concierge can walk you through room type, existing decor, and preferred wood tone to narrow the collection to what genuinely fits.</p>
-    <button class="btn btn-primary" onclick="document.getElementById('sj-concierge-launcher').click()">Ask the Concierge</button>
-  </div>
-</section>
+  <!-- The Full Collection Grid (Images injected here by script.js) -->
+  <section style="padding-top: 0;">
+    <div class="wrap">
+      <div class="piece-grid" id="full-grid"></div>
+    </div>
+  </section>
 
+  <!-- Bespoke / Concierge Call to Action -->
+  <section style="background: var(--surface); text-align:center; border-top: 1px solid var(--line);">
+    <div class="wrap-narrow reveal">
+      <span class="label">Bespoke Commissions</span>
+      <h2 style="font-family: var(--font-display); font-weight:400; font-size: clamp(30px,3.8vw,44px); margin: 20px 0 22px;">Require Custom Dimensions?</h2>
+      <p style="color: var(--ink-soft); margin-bottom: 40px; font-size: 17px;">Because every piece is crafted from raw timber to final polish in our own workshops, we can adapt our archive designs to suit the specific proportions of your residence.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('sj-concierge-launcher').click()">Discuss Custom Sizing</button>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
 <footer>
   <div class="wrap footer-row">
     <span>&copy; 2026 SJ Luxury Collezione</span>
-    <span>Iskandar Puteri, Johor — By Appointment</span>
+    <span>Iskandar Puteri, Johor — By Private Appointment</span>
     <span>Tuesday–Sunday</span>
   </div>
 </footer>
 
+<!-- Scripts -->
 <script src="products-data.js"></script>
 <script src="script.js"></script>
 <script src="concierge.js"></script>
