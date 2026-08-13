@@ -1,31 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg: #F0E1C4;
-  --bg-subtle: #E4D0A8;
-  --surface: #F8EFDD;
-  --surface-warm: #DFC79A;
-  --bg-deep: #241407;
-  --bg-deep-text: #F0E1C4;
-  --ink: #1A0F08;
-  --ink-soft: #4E4036;
-  --ink-muted: #8C7A6B;
-  --gold: #A9825A;
-  --gold-light: #D4AF7A;
-  --gold-deep: #7A5A34;
-  --gold-glow: rgba(169, 130, 90, 0.18);
-  --gold-foil: linear-gradient(115deg, #8B6836 8%, #E8C687 32%, #C9A25C 45%, #8B6836 65%, #D4AF7A 82%);
-  --rosewood: #6E2015;
-  --rosewood-dark: #3E1109;
-  --rosewood-glow: rgba(110, 32, 21, 0.16);
-  --line: #D6BD8C;
-  --line-gold: rgba(169, 130, 90, 0.38);
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Manrope', -apple-system, sans-serif;
-  --shadow-sm: 0 4px 16px rgba(30, 16, 8, 0.06);
-  --shadow-md: 0 14px 36px rgba(30, 16, 8, 0.11);
-  --shadow-lg: 0 28px 70px rgba(30, 16, 8, 0.2);
-  --shadow-gold: 0 10px 30px rgba(122, 90, 52, 0.26);
+  /* Charcoal + oxblood dark mode. --ink/--bg keep their original semantic
+     roles (ink = high-contrast foreground, bg = page background) so the
+     many existing background:var(--ink); color:var(--bg) "invert" patterns
+     (buttons, hover states) still produce valid pairs after the flip —
+     only the few rules that assumed a specific LIGHTNESS direction rather
+     than just contrast needed individual fixes (see below). */
+  --bg: #1A1511;
+  --bg-subtle: #221B14;
+  --surface: #2B2219;
+  --surface-warm: #3D2E1D;
+  --bg-deep: #0D0906;
+  --bg-deep-text: #EDE1CF;
+  --ink: #EDE1CF;
+  --ink-soft: #C7B7A0;
+  --ink-muted: #98876F;
+  --gold: #B4905F;
+  --gold-light: #E3C08D;
+  --gold-deep: #8C6B40;
+  --gold-glow: rgba(180, 144, 95, 0.22);
+  --gold-foil: linear-gradient(115deg, #8C6B40 8%, #EED7A8 32%, #D8AE72 45%, #8C6B40 65%, #E3C08D 82%);
+  /* --rosewood doubles as body-text-sized accent color in many places
+     (headings, link hovers, form errors) as well as large button fills —
+     brightened past a "true" oxblood so small text stays legible against
+     the near-black page; --rosewood-dark stays deep and is only ever used
+     for large fills/gradients, never as a text color. */
+  --rosewood: #C1483A;
+  --rosewood-dark: #4A130D;
+  --rosewood-glow: rgba(193, 72, 58, 0.28);
+  --line: rgba(237, 225, 207, 0.14);
+  --line-gold: rgba(180, 144, 95, 0.42);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.55);
+  --shadow-gold: 0 10px 30px rgba(180, 144, 95, 0.3);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,22 +52,24 @@ body {
   position: relative;
 }
 
-/* A near-imperceptible grain keeps large ivory fields from reading as flat,
-   digital-default color — a common finish on high-end brand sites. */
+/* A near-imperceptible grain keeps large dark fields from reading as flat,
+   digital-default color — a common finish on high-end brand sites. Overlay
+   (not multiply) because multiply only ever darkens, which is invisible
+   against an already-dark charcoal background. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: multiply;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--rosewood);
-  color: var(--bg);
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -75,7 +88,7 @@ img { max-width: 100%; display: block; }
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.26em;
-  color: var(--gold-deep);
+  color: var(--gold);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -127,15 +140,15 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 900;
-  background: rgba(240, 225, 196, 0.88);
+  background: rgba(26, 21, 17, 0.86);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line-gold);
   transition: background 0.35s ease, box-shadow 0.35s ease;
 }
 .nav-header.scrolled {
-  background: rgba(240, 225, 196, 0.97);
-  box-shadow: 0 8px 24px rgba(30, 16, 8, 0.09);
+  background: rgba(26, 21, 17, 0.97);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 .nav-header.scrolled .nav { padding-top: 15px; padding-bottom: 15px; }
 
@@ -201,6 +214,22 @@ img { max-width: 100%; display: block; }
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero > *:not(.hero-bg) { position: relative; z-index: 1; }
+
+/* Decorative glow, not a photo (the site deliberately runs no stock
+   imagery) — drifts slower than scroll for a parallax sense of depth. */
+.hero-bg {
+  position: absolute;
+  inset: -15% -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 28% 15%, rgba(156, 50, 38, 0.22), transparent 60%),
+    radial-gradient(ellipse 45% 35% at 78% 75%, rgba(180, 144, 95, 0.15), transparent 60%);
+  will-change: transform;
 }
 
 .hero-eyebrow {
@@ -286,7 +315,7 @@ img { max-width: 100%; display: block; }
   transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary:hover::after { left: 130%; }
-.btn-primary:hover { background: var(--rosewood); border-color: var(--rosewood); transform: translateY(-2px); box-shadow: var(--shadow-gold); }
+.btn-primary:hover { background: var(--rosewood); border-color: var(--rosewood); color: var(--ink); transform: translateY(-2px); box-shadow: var(--shadow-gold); }
 .btn-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn-secondary:hover { background: var(--surface-warm); border-color: var(--gold); transform: translateY(-2px); }
 
@@ -329,8 +358,8 @@ section { padding: 120px 0; }
 .section-dark .info-label { color: var(--gold-light); }
 .section-dark .btn-secondary { color: var(--bg-deep-text); border-color: rgba(240, 225, 196, 0.3); }
 .section-dark .btn-secondary:hover { background: rgba(240, 225, 196, 0.08); border-color: var(--gold-light); color: var(--bg-deep-text); }
-.section-dark .btn-primary { background: var(--gold-deep); border-color: var(--gold-deep); color: var(--bg-deep-text); }
-.section-dark .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); color: var(--bg-deep); }
+.section-dark .btn-primary { background: var(--gold-light); border-color: var(--gold-light); color: var(--bg-deep); }
+.section-dark .btn-primary:hover { background: var(--rosewood); border-color: var(--rosewood); color: var(--bg-deep-text); }
 .section-dark .btn-primary::after { background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.4), transparent); }
 
 /* ---------- Museum Collection Grid ---------- */
@@ -451,9 +480,9 @@ section { padding: 120px 0; }
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--ink);
+  color: var(--gold-light);
   font-weight: 600;
-  background: linear-gradient(120deg, var(--surface-warm), #EDD9AC 50%, var(--surface-warm));
+  background: linear-gradient(120deg, var(--surface-warm), #4A3822 50%, var(--surface-warm));
   padding: 5px 11px;
   border: 1px solid var(--line-gold);
 }
@@ -498,9 +527,9 @@ section { padding: 120px 0; }
   align-items: center;
   gap: 8px;
   padding-top: 10px;
-  transition: gap 0.3s ease;
+  transition: gap 0.3s ease, color 0.3s ease;
 }
-.piece-link:hover { gap: 14px; color: var(--rosewood-dark); }
+.piece-link:hover { gap: 14px; color: var(--gold-light); }
 
 /* ---------- Craftsmanship Showcase ---------- */
 .craft-row {
@@ -571,8 +600,8 @@ section { padding: 120px 0; }
 .two-col .art-block {
   aspect-ratio: 4/5;
   background:
-    radial-gradient(ellipse at top left, var(--surface-warm), transparent),
-    linear-gradient(150deg, #F3E4C4, #D9BE8C);
+    radial-gradient(ellipse at top left, rgba(156, 50, 38, 0.16), transparent),
+    linear-gradient(150deg, var(--surface-warm), var(--bg-deep));
   border: 1px solid var(--line-gold);
   box-shadow: var(--shadow-md);
   position: relative;
@@ -593,6 +622,43 @@ section { padding: 120px 0; }
   background-repeat: no-repeat;
   background-size: contain;
   opacity: 0.5;
+}
+
+/* ---------- Wood Species Sticky Split-Screen ---------- */
+.wood-split { display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: start; }
+
+.wood-pin { position: sticky; top: 120px; align-self: start; }
+.wood-pin-inner {
+  background: var(--surface);
+  border: 1px solid var(--line-gold);
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+.wood-pin-eyebrow {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.wood-pin-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 34px;
+  color: var(--ink);
+  transition: color 0.4s ease;
+}
+.wood-pin-swatch {
+  width: 100%;
+  height: 5px;
+  margin-top: 28px;
+  border-radius: 2px;
+  background: var(--gold);
+  transition: background 0.5s ease;
 }
 
 /* ---------- Wood Table ---------- */
@@ -650,6 +716,70 @@ section { padding: 120px 0; }
   font-weight: 600;
   margin-bottom: 14px;
 }
+
+/* ---------- Multi-step "Invitation" Consultation Form ---------- */
+.form-progress { height: 2px; background: var(--line); margin-bottom: 12px; }
+.form-progress-bar { height: 100%; background: var(--gold-foil); background-size: 260% 100%; width: 16.66%; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.form-step-count {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+
+.form-step { display: none; }
+.form-step.active { display: block; animation: stepIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .form-step.active { animation: none; }
+}
+
+.form-step-question {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--ink);
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+.form-step-hint {
+  display: block;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  margin-top: 8px;
+}
+
+.form-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+.form-back {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.25s ease;
+}
+.form-back:hover { color: var(--gold); }
+.form-continue, .form-submit { margin-left: auto; }
 
 .pill-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .pill {
@@ -771,7 +901,7 @@ footer::before {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
 }
-#sj-whatsapp-btn { background: #2E402D; }
+#sj-whatsapp-btn { background: #35583A; color: var(--ink); }
 #sj-whatsapp-btn:hover, #sj-concierge-launcher:hover { transform: scale(1.08); box-shadow: 0 16px 40px rgba(14,10,8,0.25); }
 
 #sj-concierge-launcher {
@@ -811,8 +941,8 @@ footer::before {
 }
 
 .gc-header {
-  background: linear-gradient(135deg, var(--ink), var(--rosewood-dark) 140%);
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--bg-deep), var(--rosewood-dark) 140%);
+  color: var(--ink);
   padding: 22px 24px;
   display: flex;
   justify-content: space-between;
@@ -822,7 +952,7 @@ footer::before {
 .gc-header-title { font-family: var(--font-display); font-style: italic; font-size: 20px; font-weight: 500; }
 .gc-header-status { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 0.1em; opacity: 0.8; margin-top: 2px; text-transform: uppercase; }
 .gc-status-dot { width: 7px; height: 7px; background: #4EA367; border-radius: 50%; display: inline-block; }
-.gc-close { cursor: pointer; background: none; border: none; color: var(--bg); font-size: 24px; opacity: 0.7; transition: opacity 0.2s; }
+.gc-close { cursor: pointer; background: none; border: none; color: var(--ink); font-size: 24px; opacity: 0.7; transition: opacity 0.2s; }
 .gc-close:hover { opacity: 1; }
 
 .gc-body { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: var(--bg); }
@@ -853,8 +983,8 @@ footer::before {
 .gc-input-row { display: flex; align-items: center; border-top: 1px solid var(--line); padding: 14px; gap: 10px; background: var(--surface); }
 .gc-input-row input[type="text"] { flex-grow: 1; border: none; padding: 10px 12px; font-size: 14px; background: transparent; font-family: var(--font-body); }
 .gc-input-row input:focus { outline: none; }
-.gc-send { background: var(--ink); color: var(--bg); border: none; padding: 0 22px; cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; transition: background 0.2s; }
-.gc-send:hover { background: var(--rosewood); }
+.gc-send { background: var(--ink); color: var(--bg); border: none; padding: 0 22px; cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; transition: background 0.2s, color 0.2s; }
+.gc-send:hover { background: var(--rosewood); color: var(--ink); }
 
 .gc-file-input { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
@@ -872,12 +1002,37 @@ footer::before {
 .gc-piece-card-tier { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--rosewood); }
 .gc-piece-card-name { font-size: 13px; color: var(--ink); font-weight: 500; }
 
+/* ---------- Custom Cursor ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-active, .custom-cursor-active * { cursor: none; }
+  .custom-cursor-active input, .custom-cursor-active textarea, .custom-cursor-active select {
+    cursor: auto;
+  }
+}
+#custom-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 16px; height: 16px;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, background 0.25s ease;
+}
+#custom-cursor.visible { opacity: 1; }
+#custom-cursor.hover { width: 48px; height: 48px; background: rgba(255, 255, 255, 0.12); }
+#custom-cursor.text-context { opacity: 0; }
+
 /* ---------- Mobile Responsive ---------- */
 @media (max-width: 960px) {
   .piece-grid { grid-template-columns: repeat(2, 1fr); }
   .craft-row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .two-col { grid-template-columns: 1fr; gap: 48px; }
   .wood-row { grid-template-columns: 1fr; gap: 14px; }
+  .wood-split { grid-template-columns: 1fr; gap: 24px; }
+  .wood-pin { position: static; }
   .nav-links { display: none; }
   .nav-toggle { display: block; }
   .nav-cta { display: none; }

@@ -6,7 +6,7 @@
 
   function sealSVG() {
     return `<svg class="seal" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="36" height="36" rx="3" fill="#6B2318"/>
+      <rect x="2" y="2" width="36" height="36" rx="3" fill="#9C3226"/>
       <path d="M12 20c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7z" fill="none" stroke="#FAF7F2" stroke-width="1.4"/>
       <circle cx="20" cy="20" r="3" fill="#FAF7F2"/>
     </svg>`;

@@ -56,6 +56,24 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', updateNavState, { passive: true });
   }
 
+  // 2c. Hero parallax — the decorative glow layer drifts slower than the
+  // page scrolls, a depth cue in place of a (nonexistent) hero photo.
+  const heroBg = document.querySelector('.hero-bg');
+  if (heroBg && !prefersReducedMotion) {
+    let ticking = false;
+    const updateParallax = () => {
+      heroBg.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(updateParallax); ticking = true; }
+    }, { passive: true });
+  }
+
+  // 2d. Wood Species sticky split-screen (heritage.html only) — pins a
+  // panel showing the wood currently in view as the descriptions scroll.
+  initWoodPin();
+
   // 3. Render Homepage Featured Collection (First 3 items)
   const featuredGrid = document.getElementById('featured-grid');
   if (featuredGrid && typeof COLLECTION !== 'undefined') {
@@ -70,10 +88,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5. Consultation Request Form
   initConsultForm();
+
+  // 6. Custom cursor (desktop only, see initCustomCursor for the guards)
+  initCustomCursor();
 });
 
-// Wires up the pill selectors and submit handling for consultation.html's
-// qualification form. Was previously markup-only with no JS behind it.
+// A delicate, inverted-color ring cursor that expands over clickable
+// elements. Desktop-only (fine pointer + hover-capable) so it never breaks
+// touch interaction, skipped under prefers-reduced-motion, and the native
+// cursor is explicitly restored over text inputs so typing still shows a
+// normal I-beam instead of vanishing.
+function initCustomCursor() {
+  if (prefersReducedMotion) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  document.documentElement.classList.add('custom-cursor-active');
+  const cursor = document.createElement('div');
+  cursor.id = 'custom-cursor';
+  document.body.appendChild(cursor);
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let ticking = false;
+  let shown = false;
+
+  const paint = () => {
+    cursor.style.transform = `translate(${targetX}px, ${targetY}px) translate(-50%, -50%)`;
+    ticking = false;
+  };
+
+  document.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!shown) { cursor.classList.add('visible'); shown = true; }
+    if (!ticking) { requestAnimationFrame(paint); ticking = true; }
+  });
+  document.addEventListener('mouseleave', () => { cursor.classList.remove('visible'); shown = false; });
+
+  const hoverSelector = 'a, button, .pill, .gc-chip, .piece, .piece-media';
+  const textSelector = 'input, textarea, select';
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverSelector)) cursor.classList.add('hover');
+    if (e.target.closest(textSelector)) cursor.classList.add('text-context');
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverSelector)) cursor.classList.remove('hover');
+    if (e.target.closest(textSelector)) cursor.classList.remove('text-context');
+  });
+}
+
+// Sticky split-screen for heritage.html's Wood Species section: a pinned
+// panel on the left updates to name whichever wood entry is centered in
+// the viewport on the right, tracked via IntersectionObserver.
+function initWoodPin() {
+  const rows = document.querySelectorAll('#wood-table .wood-row');
+  const pinName = document.getElementById('wood-pin-name');
+  const pinSwatch = document.getElementById('wood-pin-swatch');
+  if (!rows.length || !pinName || !pinSwatch) return;
+
+  const setActive = (row) => {
+    pinName.textContent = row.dataset.wood;
+    pinSwatch.style.background = row.dataset.tone;
+  };
+  setActive(rows[0]);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActive(entry.target);
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  rows.forEach(row => observer.observe(row));
+}
+
+// Wires up the pill selectors, step navigation, and submit handling for
+// consultation.html's invitation-style form: one question at a time
+// (Typeform-style) instead of every field at once.
 function initConsultForm() {
   const form = document.getElementById('consult-form');
   if (!form) return;
@@ -112,6 +202,64 @@ function initConsultForm() {
     return Array.from(document.querySelectorAll(`#${rowId} .pill.selected`)).map(p => p.textContent.trim());
   }
 
+  // ---- Step navigation (skipped entirely if this page doesn't use the
+  // multi-step markup, so this function still works on older layouts) ----
+  const steps = Array.from(form.querySelectorAll('.form-step'));
+  const backBtn = document.getElementById('form-back');
+  const continueBtn = document.getElementById('form-continue');
+  const submitBtn = document.getElementById('form-submit');
+  const progressBar = document.getElementById('form-progress-bar');
+  const stepCount = document.getElementById('form-step-count');
+  let currentStep = 1;
+
+  if (steps.length && backBtn && continueBtn && submitBtn) {
+    const showStep = (n) => {
+      steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
+      backBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
+      continueBtn.style.display = n === steps.length ? 'none' : '';
+      submitBtn.style.display = n === steps.length ? '' : 'none';
+      if (progressBar) progressBar.style.width = (n / steps.length * 100) + '%';
+      if (stepCount) stepCount.textContent = `Question ${n} of ${steps.length}`;
+      const firstInput = steps[n - 1].querySelector('input, textarea');
+      if (firstInput && !prefersReducedMotion) firstInput.focus({ preventScroll: true });
+    };
+
+    const stepIsValid = (n) => {
+      const step = steps[n - 1];
+      const requiredPillRow = step.querySelector('.pill-row[data-multi="false"]');
+      if (requiredPillRow && !requiredPillRow.querySelector('.pill.selected')) {
+        requiredPillRow.classList.add('pill-row-error');
+        return false;
+      }
+      const requiredInputs = step.querySelectorAll('input[required]');
+      for (const input of requiredInputs) {
+        if (!input.checkValidity()) { input.reportValidity(); return false; }
+      }
+      return true;
+    };
+
+    const advance = () => {
+      if (!stepIsValid(currentStep)) return;
+      if (currentStep < steps.length) { currentStep++; showStep(currentStep); }
+    };
+
+    continueBtn.addEventListener('click', advance);
+    backBtn.addEventListener('click', () => {
+      if (currentStep > 1) { currentStep--; showStep(currentStep); }
+    });
+    // Enter-to-advance only on text inputs (name/phone/email) — pills handle
+    // their own Enter to toggle selection, and must not also bubble into
+    // advancing past a multi-select step after picking just one option.
+    form.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        e.preventDefault();
+        if (currentStep < steps.length) advance();
+      }
+    });
+
+    showStep(currentStep);
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -119,43 +267,19 @@ function initConsultForm() {
     const honeypot = form.querySelector('input[name="_gotcha"]');
     if (honeypot && honeypot.value) return;
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
     const propertyType = selectedValues('property-type');
     const interestedPieces = selectedValues('interested-pieces');
     const timeline = selectedValues('timeline');
     const budgetRange = selectedValues('budget-range');
-
-    const requiredGroups = [
-      ['property-type', propertyType],
-      ['timeline', timeline],
-      ['budget-range', budgetRange],
-    ];
-    let missing = false;
-    requiredGroups.forEach(([rowId, values]) => {
-      const row = document.getElementById(rowId);
-      if (values.length === 0) {
-        row.classList.add('pill-row-error');
-        missing = true;
-      }
-    });
-    if (missing) {
-      statusEl.textContent = 'Please make a selection for each highlighted field above.';
-      statusEl.className = 'form-status error';
-      return;
-    }
 
     const name = form.querySelector('#c-name').value.trim();
     const phone = form.querySelector('#c-phone').value.trim();
     const email = form.querySelector('#c-email').value.trim();
     const notes = form.querySelector('#c-notes').value.trim();
 
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    const activeSubmitBtn = form.querySelector('button[type="submit"]');
+    activeSubmitBtn.disabled = true;
+    activeSubmitBtn.textContent = 'Submitting...';
     statusEl.textContent = '';
     statusEl.className = 'form-status';
 

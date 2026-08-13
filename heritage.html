@@ -11,7 +11,7 @@
 <header class="nav-header">
   <nav class="nav">
     <a href="index.html" class="nav-mark">
-      <svg class="seal" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="36" height="36" rx="3" fill="#6B2318"/><path d="M12 20c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7z" fill="none" stroke="#F5F1E7" stroke-width="1.4"/><circle cx="20" cy="20" r="3" fill="#F5F1E7"/></svg>
+      <svg class="seal" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="36" height="36" rx="3" fill="#9C3226"/><path d="M12 20c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7z" fill="none" stroke="#F5F1E7" stroke-width="1.4"/><circle cx="20" cy="20" r="3" fill="#F5F1E7"/></svg>
       SJ Luxury Collezione
     </a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
@@ -26,6 +26,7 @@
 </header>
 
 <header class="hero" style="padding-bottom: 60px;">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-eyebrow">
     <span class="label">Our Story</span>
   </div>
@@ -59,18 +60,27 @@
       <span class="label">Wood Species</span>
       <h2>The Timbers Behind Our Collection</h2>
     </div>
-    <div class="wood-table reveal">
-      <div class="wood-row">
-        <h4>Huanghuali</h4>
-        <p>The most prized of all Ming furniture woods, valued for its translucent golden-amber grain and subtle fragrance. Slow-growing and increasingly rare, it was historically reserved for the furniture of scholars and the imperial court.</p>
+    <div class="wood-split">
+      <div class="wood-pin reveal">
+        <div class="wood-pin-inner">
+          <span class="wood-pin-eyebrow">Now Reading</span>
+          <h3 id="wood-pin-name" class="wood-pin-name">Huanghuali</h3>
+          <div id="wood-pin-swatch" class="wood-pin-swatch"></div>
+        </div>
       </div>
-      <div class="wood-row">
-        <h4>Jichimu <span style="font-style:normal; font-family: var(--font-body); font-size: 13px; color: var(--ink-soft);">(Chicken-wing rosewood)</span></h4>
-        <p>Named for a grain pattern that resembles feathered plumage when cut and polished. Slightly more affordable than huanghuali, it was the preferred wood for large-format pieces such as beds, cabinets, and altar tables.</p>
-      </div>
-      <div class="wood-row">
-        <h4>Hóngmù</h4>
-        <p>A denser, darker rosewood favoured for ceremonial and formal pieces. Its weight and near-black patina develop richness over decades of handling — furniture that visibly improves with age rather than wearing out.</p>
+      <div class="wood-table reveal" id="wood-table">
+        <div class="wood-row" data-wood="Huanghuali" data-tone="#C9A25C">
+          <h4>Huanghuali</h4>
+          <p>The most prized of all Ming furniture woods, valued for its translucent golden-amber grain and subtle fragrance. Slow-growing and increasingly rare, it was historically reserved for the furniture of scholars and the imperial court.</p>
+        </div>
+        <div class="wood-row" data-wood="Jichimu" data-tone="#8C6B40">
+          <h4>Jichimu <span style="font-style:normal; font-family: var(--font-body); font-size: 13px; color: var(--ink-soft);">(Chicken-wing rosewood)</span></h4>
+          <p>Named for a grain pattern that resembles feathered plumage when cut and polished. Slightly more affordable than huanghuali, it was the preferred wood for large-format pieces such as beds, cabinets, and altar tables.</p>
+        </div>
+        <div class="wood-row" data-wood="Hóngmù" data-tone="#7A2419">
+          <h4>Hóngmù</h4>
+          <p>A denser, darker rosewood favoured for ceremonial and formal pieces. Its weight and near-black patina develop richness over decades of handling — furniture that visibly improves with age rather than wearing out.</p>
+        </div>
       </div>
     </div>
   </div>
