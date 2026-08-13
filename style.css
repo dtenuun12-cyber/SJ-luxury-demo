@@ -597,6 +597,16 @@ footer { border-top: 1px solid var(--line); padding: 60px 0; background: var(--b
 .gc-msg.bot { background: var(--surface); border: 1px solid var(--line); align-self: flex-start; color: var(--ink-soft); box-shadow: var(--shadow-sm); }
 .gc-msg.user { background: var(--ink); color: var(--bg); align-self: flex-end; }
 .gc-msg.typing { color: var(--ink-muted); font-style: italic; background: transparent; border: none; }
+.gc-msg.streaming::after { content: '\258C'; display: inline-block; margin-left: 2px; color: var(--rosewood); animation: gcBlink 0.9s step-start infinite; }
+@keyframes gcBlink { 50% { opacity: 0; } }
+
+/* Honeypot fields — hidden from sighted users, still reachable by simple bots that fill every field */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.form-status { margin-top: 16px; font-size: 14px; }
+.form-status.error { color: var(--rosewood); }
+.form-status.success { padding: 20px; background: var(--bg-subtle); border: 1px solid var(--line-gold); font-size: 16px; color: var(--ink); }
+.pill-row-error .pill { border-color: var(--rosewood); }
 
 .gc-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .gc-chip { background: var(--surface); border: 1px solid var(--line); padding: 8px 14px; font-size: 12px; color: var(--rosewood); cursor: pointer; transition: all 0.2s; }
@@ -606,11 +616,27 @@ footer { border-top: 1px solid var(--line); padding: 60px 0; background: var(--b
 .gc-lead-link { background: none; border: none; color: var(--rosewood); font-size: 13px; font-weight: 500; cursor: pointer; padding: 4px 0; }
 .gc-lead-link:hover { text-decoration: underline; }
 
-.gc-input-row { display: flex; border-top: 1px solid var(--line); padding: 14px; gap: 10px; background: var(--surface); }
-.gc-input-row input { flex-grow: 1; border: none; padding: 10px 12px; font-size: 14px; background: transparent; font-family: var(--font-body); }
+.gc-input-row { display: flex; align-items: center; border-top: 1px solid var(--line); padding: 14px; gap: 10px; background: var(--surface); }
+.gc-input-row input[type="text"] { flex-grow: 1; border: none; padding: 10px 12px; font-size: 14px; background: transparent; font-family: var(--font-body); }
 .gc-input-row input:focus { outline: none; }
 .gc-send { background: var(--ink); color: var(--bg); border: none; padding: 0 22px; cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; transition: background 0.2s; }
 .gc-send:hover { background: var(--rosewood); }
+
+.gc-file-input { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.gc-photo-btn { flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+.gc-photo-btn:hover { border-color: var(--rosewood); color: var(--rosewood); }
+
+.gc-msg-image { padding: 6px; background: var(--surface); border: 1px solid var(--line); }
+.gc-msg-image img { display: block; max-width: 100%; max-height: 220px; border-radius: 1px; }
+
+.gc-piece-cards { display: flex; flex-direction: column; gap: 8px; max-width: 88%; align-self: flex-start; }
+.gc-piece-card { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); padding: 8px; cursor: pointer; text-align: left; font-family: var(--font-body); transition: border-color 0.2s; }
+.gc-piece-card:hover { border-color: var(--rosewood); }
+.gc-piece-card img { width: 52px; height: 52px; object-fit: cover; flex-shrink: 0; border-radius: 1px; }
+.gc-piece-card-body { display: flex; flex-direction: column; gap: 2px; }
+.gc-piece-card-tier { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--rosewood); }
+.gc-piece-card-name { font-size: 13px; color: var(--ink); font-weight: 500; }
 
 /* ---------- Mobile Responsive ---------- */
 @media (max-width: 960px) {

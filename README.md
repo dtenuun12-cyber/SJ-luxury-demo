@@ -17,9 +17,15 @@ script.js            Nav, scroll reveal, collection rendering, consultation form
 concierge.js         The Luxury Furniture Concierge widget (chat)
 products-data.js     The 6 signature pieces — names, story copy, wood, tier
 config.json          Business info + the concierge's system prompt
-api/chat.js          Backend — calls Groq (free) with the concierge's instructions
+api/chat.js          Backend — calls Groq (free) with the concierge's instructions, streamed token-by-token
+api/room-recommend.js    Backend — vision model matches a room photo to real collection pieces
 api/notify-whatsapp.js   Sends consultation requests straight to the owner's WhatsApp
+api/_rate-limit.js       Shared per-IP rate limiting used by the three endpoints above
 ```
+
+The concierge's conversation also persists across page navigation (via
+`sessionStorage`) so browsing from Home to Heritage to Collections doesn't
+reset it mid-conversation — it clears when the browser tab closes.
 
 This follows the same deployment pattern as your first build (GitHub → Vercel →
 Groq → CallMeBot). If you haven't deployed a project before, revisit those steps —
@@ -46,20 +52,36 @@ craftsmanship process. Treat this as a realistic mockup of the *format*, not
 literal copy to publish.
 
 **3. Two things need real accounts before launch (same as before):**
-- `FORMSPREE_ENDPOINT` in `script.js`
+- `FORMSPREE_ENDPOINT` in `script.js` (this was previously undefined here — now fixed, see below, but you still need to paste your own endpoint in)
 - `GROQ_API_KEY` and `CALLMEBOT_APIKEY` as Vercel environment variables
 
-## What's intentionally NOT built yet — the room-photo AI feature
+## Fixed since the first pass — lead capture was silently broken
 
-The brief mentions an "upload a photo of your room, get furniture
-recommendations" feature. This is a real, buildable feature, but it's a
-meaningfully bigger scope than everything else here — it needs a vision-capable
-AI model (not all free tiers support this well) and a different interaction
-flow. I'd treat this as a strong "phase 2" pitch to SJ Luxury rather than
-something to build before your first meeting: mention it as part of your
-roadmap/vision for the partnership, which also gives you a reason for an
-ongoing relationship instead of a one-off project. Tell me when you want to
-build it and we will.
+Two bugs meant leads could be lost even after everything else was set up:
+- `script.js` never defined `FORMSPREE_ENDPOINT`, so the concierge's "Book a
+  Private Showroom Appointment" form always failed silently (it caught the
+  error and showed a generic message, so this was easy to miss in a demo).
+- `consultation.html` — the site's main qualification form — had no JavaScript
+  behind it at all. The pills didn't toggle selected, and submitting did
+  nothing. It's now fully wired: pill selection (single/multi per group),
+  required-field validation, and dual-submission to Formspree + the owner's
+  WhatsApp, matching the concierge's lead flow.
+
+Both lead forms and the API endpoints also got a honeypot field and basic
+per-IP rate limiting (`api/_rate-limit.js`) — cheap protection against bots
+hammering your free Groq/CallMeBot quota, best-effort since it resets on
+serverless cold starts.
+
+## The room-photo AI feature — now built
+
+Customers can upload a photo of their room from inside the concierge widget
+(camera icon next to the input, or the "Match a Room Photo" suggestion chip).
+It's sent to `api/room-recommend.js`, which uses a vision-capable Groq model
+(`meta-llama/llama-4-scout-17b-16e-instruct` — Groq's free-tier vision model;
+`llama-3.3-70b-versatile` used elsewhere is text-only) to recommend 1-3 real
+pieces from the collection, shown as inline cards the customer can click
+straight into the consultation-booking flow. The photo is downscaled in the
+browser before upload to keep requests small and fast.
 
 ## Pitching this specifically
 

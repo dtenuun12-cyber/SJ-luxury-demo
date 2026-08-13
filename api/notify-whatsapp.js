@@ -1,5 +1,6 @@
 // Vercel serverless function — handles POST /api/notify-whatsapp
 const config = require('../config.json');
+const { rateLimit } = require('./_rate-limit');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,7 +8,15 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, phone, email, note } = req.body || {};
+  if (!rateLimit(req, res, { windowMs: 60_000, max: 5, key: 'notify-whatsapp' })) return;
+
+  const { name, phone, email, note, _gotcha } = req.body || {};
+
+  // Honeypot: real visitors never fill this hidden field. Pretend success so
+  // bots don't learn to look for a different signal.
+  if (_gotcha) {
+    return res.status(200).json({ success: true });
+  }
 
   if (!name || typeof name !== 'string' || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' });
