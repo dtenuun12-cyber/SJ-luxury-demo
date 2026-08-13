@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg: #FAF7F2;
-  --bg-subtle: #F3ECE1;
-  --surface: #FFFFFF;
-  --surface-warm: #EBE1D0;
-  --ink: #120B08;
+  --bg: #F0E1C4;
+  --bg-subtle: #E4D0A8;
+  --surface: #F8EFDD;
+  --surface-warm: #DFC79A;
+  --bg-deep: #241407;
+  --bg-deep-text: #F0E1C4;
+  --ink: #1A0F08;
   --ink-soft: #4E4036;
   --ink-muted: #8C7A6B;
   --gold: #A9825A;
@@ -16,14 +18,14 @@
   --rosewood: #6E2015;
   --rosewood-dark: #3E1109;
   --rosewood-glow: rgba(110, 32, 21, 0.16);
-  --line: #E2D7C5;
-  --line-gold: rgba(169, 130, 90, 0.3);
+  --line: #D6BD8C;
+  --line-gold: rgba(169, 130, 90, 0.38);
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Manrope', -apple-system, sans-serif;
-  --shadow-sm: 0 4px 16px rgba(30, 16, 8, 0.05);
-  --shadow-md: 0 14px 36px rgba(30, 16, 8, 0.09);
-  --shadow-lg: 0 28px 70px rgba(30, 16, 8, 0.16);
-  --shadow-gold: 0 10px 30px rgba(122, 90, 52, 0.22);
+  --shadow-sm: 0 4px 16px rgba(30, 16, 8, 0.06);
+  --shadow-md: 0 14px 36px rgba(30, 16, 8, 0.11);
+  --shadow-lg: 0 28px 70px rgba(30, 16, 8, 0.2);
+  --shadow-gold: 0 10px 30px rgba(122, 90, 52, 0.26);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -125,15 +127,15 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 900;
-  background: rgba(250, 247, 242, 0.88);
+  background: rgba(240, 225, 196, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line-gold);
   transition: background 0.35s ease, box-shadow 0.35s ease;
 }
 .nav-header.scrolled {
-  background: rgba(250, 247, 242, 0.97);
-  box-shadow: 0 8px 24px rgba(30, 16, 8, 0.06);
+  background: rgba(240, 225, 196, 0.97);
+  box-shadow: 0 8px 24px rgba(30, 16, 8, 0.09);
 }
 .nav-header.scrolled .nav { padding-top: 15px; padding-bottom: 15px; }
 
@@ -306,6 +308,31 @@ section { padding: 120px 0; }
 }
 .section-head p { margin-top: 20px; color: var(--ink-soft); font-size: 17px; }
 
+/* ---------- Dark Contrast Sections ---------- */
+/* A handful of sections switch to deep chocolate-brown instead of the usual
+   parchment, giving the page a light/dark rhythm rather than one long
+   ivory field — the same real copy, just given a heavier frame. */
+.section-dark {
+  background: var(--bg-deep);
+  color: var(--bg-deep-text);
+}
+.section-dark h1, .section-dark h2, .section-dark h3, .section-dark h4,
+.section-dark .lede, .section-dark .info-value {
+  color: var(--bg-deep-text);
+}
+.section-dark p, .section-dark .prose, .section-dark .section-head p,
+.section-dark .hero-sub {
+  color: rgba(240, 225, 196, 0.72);
+}
+.section-dark .label { color: var(--gold-light); }
+.section-dark .info-row { border-bottom-color: rgba(240, 225, 196, 0.15); }
+.section-dark .info-label { color: var(--gold-light); }
+.section-dark .btn-secondary { color: var(--bg-deep-text); border-color: rgba(240, 225, 196, 0.3); }
+.section-dark .btn-secondary:hover { background: rgba(240, 225, 196, 0.08); border-color: var(--gold-light); color: var(--bg-deep-text); }
+.section-dark .btn-primary { background: var(--gold-deep); border-color: var(--gold-deep); color: var(--bg-deep-text); }
+.section-dark .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); color: var(--bg-deep); }
+.section-dark .btn-primary::after { background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.4), transparent); }
+
 /* ---------- Museum Collection Grid ---------- */
 .piece-grid {
   display: grid;
@@ -426,7 +453,7 @@ section { padding: 120px 0; }
   letter-spacing: 0.18em;
   color: var(--ink);
   font-weight: 600;
-  background: linear-gradient(120deg, var(--surface-warm), #F6E9D2 50%, var(--surface-warm));
+  background: linear-gradient(120deg, var(--surface-warm), #EDD9AC 50%, var(--surface-warm));
   padding: 5px 11px;
   border: 1px solid var(--line-gold);
 }
@@ -545,7 +572,7 @@ section { padding: 120px 0; }
   aspect-ratio: 4/5;
   background:
     radial-gradient(ellipse at top left, var(--surface-warm), transparent),
-    linear-gradient(150deg, #FAF5EA, #E2D6C3);
+    linear-gradient(150deg, #F3E4C4, #D9BE8C);
   border: 1px solid var(--line-gold);
   box-shadow: var(--shadow-md);
   position: relative;
@@ -669,27 +696,52 @@ textarea { resize: vertical; min-height: 120px; }
 /* ---------- Footer ---------- */
 footer {
   position: relative;
-  border-top: 1px solid var(--line);
-  padding: 60px 0;
-  background: var(--bg-subtle);
+  padding: 88px 0 0;
+  background: var(--bg-deep);
+  color: rgba(240, 225, 196, 0.7);
 }
 footer::before {
   content: '';
   position: absolute;
-  top: -1px; left: 0; right: 0;
+  top: 0; left: 0; right: 0;
   height: 3px;
   background: var(--gold-foil);
   background-size: 260% 100%;
-  opacity: 0.7;
 }
-.footer-row {
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 64px;
+  border-bottom: 1px solid rgba(240, 225, 196, 0.12);
+}
+
+.footer-brand .nav-mark { color: var(--bg-deep-text); font-size: 24px; margin-bottom: 16px; }
+.footer-brand p { max-width: 320px; font-size: 14.5px; line-height: 1.8; }
+
+.footer-col-title {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-light);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.footer-col { display: flex; flex-direction: column; gap: 12px; font-size: 14px; }
+.footer-col a { color: rgba(240, 225, 196, 0.7); transition: color 0.25s ease; }
+.footer-col a:hover { color: var(--gold-light); }
+
+.footer-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
-  font-size: 13px;
-  color: var(--ink-muted);
+  gap: 16px;
+  padding: 28px 0 32px;
+  font-size: 12.5px;
+  color: rgba(240, 225, 196, 0.45);
 }
 
 /* ---------- Scroll Reveal ---------- */
@@ -830,6 +882,8 @@ footer::before {
   .nav-toggle { display: block; }
   .nav-cta { display: none; }
   .hero { padding-top: 100px; }
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .footer-brand { grid-column: 1 / -1; }
 }
 
 @media (max-width: 900px) {
@@ -849,4 +903,6 @@ footer::before {
   .consult-form { padding: 28px; }
   #sj-concierge-panel { right: 20px; width: calc(100vw - 40px); bottom: 94px; }
   .floating-actions { right: 20px; bottom: 20px; }
+  .footer-main { grid-template-columns: 1fr; gap: 36px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
 }
