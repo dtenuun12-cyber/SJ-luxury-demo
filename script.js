@@ -3,19 +3,34 @@
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 window.SJ_FORMSPREE_ENDPOINT = FORMSPREE_ENDPOINT;
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Reveals elements that share a parent in a short cascade instead of all at
+// once — e.g. the four craft-steps step in left-to-right rather than popping
+// in together. Capped so a long list (the full collection grid) doesn't end
+// up with an awkwardly long tail.
+function revealStaggered(el) {
+  if (!prefersReducedMotion && el.parentElement) {
+    const siblings = Array.from(el.parentElement.children).filter(c => c.classList.contains('reveal'));
+    const idx = siblings.indexOf(el);
+    if (idx > 0) el.style.transitionDelay = Math.min(idx * 70, 420) + 'ms';
+  }
+  el.classList.add('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Scroll Reveal Animations
   const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.15 
+    threshold: 0.15
   };
 
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-        observer.unobserve(entry.target); 
+        revealStaggered(entry.target);
+        observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
@@ -31,6 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
     navToggle.addEventListener('click', () => {
       navLinks.classList.toggle('open');
     });
+  }
+
+  // 2b. Condense the sticky nav once the page has scrolled past the hero
+  const navHeader = document.querySelector('.nav-header');
+  if (navHeader) {
+    const updateNavState = () => navHeader.classList.toggle('scrolled', window.scrollY > 24);
+    updateNavState();
+    window.addEventListener('scroll', updateNavState, { passive: true });
   }
 
   // 3. Render Homepage Featured Collection (First 3 items)
@@ -211,7 +234,7 @@ function renderPieces(pieces, selector) {
     const dynamicObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('active');
+          revealStaggered(entry.target);
           obs.unobserve(entry.target);
         }
       });
